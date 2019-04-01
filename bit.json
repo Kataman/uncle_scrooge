@@ -1,0 +1,8 @@
+{
+    "env": {},
+    "dependencies": {
+        "muicss.mui/form": "0.9.41"
+    },
+    "componentsDefaultDirectory": "components/{name}",
+    "packageManager": "npm"
+}

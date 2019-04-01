@@ -1,0 +1,984 @@
+{
+  "openapi" : "3.0.0",
+  "info" : {
+    "title" : "Магазин акций",
+    "version" : "0.0.1"
+  },
+  "servers" : [ {
+    "url" : "/"
+  } ],
+  "paths" : {
+    "/api/auth/signup" : {
+      "post" : {
+        "tags" : [ "Auth" ],
+        "summary" : "Зарегестрировать нового пользователя",
+        "description" : "Если регистрация успешна, сразу возвращает пару токенов для дальнейших запросов",
+        "operationId" : "signUp",
+        "requestBody" : {
+          "$ref" : "#/components/requestBodies/LoginAndPassword"
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Пара JWT токенов",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Tokens"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Одно или несколько полей содержат недопустимые значения",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ValidationError"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Внутренняя ошибка сервера",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/signin" : {
+      "post" : {
+        "tags" : [ "Auth" ],
+        "summary" : "Авторизовать существующего пользователя",
+        "description" : "Возвращает пару токенов для дальнейших запросов",
+        "operationId" : "signIn",
+        "requestBody" : {
+          "$ref" : "#/components/requestBodies/LoginAndPassword"
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Пара JWT токенов",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Tokens"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Пользователь не авторизован",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Внутренняя ошибка сервера",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/refresh" : {
+      "post" : {
+        "tags" : [ "Auth" ],
+        "summary" : "Запросить новый access токен взамен истекшего",
+        "operationId" : "refreshToken",
+        "requestBody" : {
+          "$ref" : "#/components/requestBodies/RefreshToken"
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Пара JWT токенов",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Tokens"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Пользователь не авторизован",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403" : {
+            "description" : "Пользователь не авторизован",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Внутренняя ошибка сервера",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ]
+      }
+    },
+    "/api/account/info" : {
+      "get" : {
+        "tags" : [ "Account" ],
+        "summary" : "Информация о балансе",
+        "operationId" : "getAccountInfo",
+        "responses" : {
+          "200" : {
+            "description" : "Информация об аккаунте",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/AccountInfo"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Пользователь не авторизован",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Внутренняя ошибка сервера",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ]
+      }
+    },
+    "/api/transaction/buy" : {
+      "post" : {
+        "tags" : [ "Transaction" ],
+        "summary" : "Купить акции",
+        "operationId" : "buyStocks",
+        "requestBody" : {
+          "$ref" : "#/components/requestBodies/Transaction"
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Статус транзакции",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/TransactionStatus"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Одно или несколько полей содержат недопустимые значения",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ValidationError"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Пользователь не авторизован",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Акция не найдена",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Внутренняя ошибка сервера",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ]
+      }
+    },
+    "/api/transaction/sell" : {
+      "post" : {
+        "tags" : [ "Transaction" ],
+        "summary" : "Продать акции",
+        "operationId" : "sellStoks",
+        "requestBody" : {
+          "$ref" : "#/components/requestBodies/Transaction"
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Статус транзакции",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/TransactionStatus"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Одно или несколько полей содержат недопустимые значения",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ValidationError"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Пользователь не авторизован",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Акция не найдена",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Внутренняя ошибка сервера",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ]
+      }
+    },
+    "/api/transaction/history" : {
+      "get" : {
+        "tags" : [ "Transaction" ],
+        "summary" : "История транзакций",
+        "operationId" : "getTransactionsHistory",
+        "responses" : {
+          "200" : {
+            "description" : "История транзакций",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/History"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Пользователь не авторизован",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Внутренняя ошибка сервера",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ]
+      }
+    },
+    "/api/stocks" : {
+      "get" : {
+        "tags" : [ "Stocks" ],
+        "summary" : "Получить список акций",
+        "description" : "Список будет сформирован с учетом переданных модификаторов",
+        "operationId" : "getStocks",
+        "parameters" : [ {
+          "name" : "search",
+          "in" : "query",
+          "description" : "Поиск по наименованию",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "maxLength" : 100,
+            "minLength" : 3,
+            "type" : "string"
+          }
+        }, {
+          "name" : "count",
+          "in" : "query",
+          "description" : "Сколько вернуть",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "maximum" : 50,
+            "minimum" : 1,
+            "type" : "integer"
+          }
+        }, {
+          "name" : "itemId",
+          "in" : "query",
+          "description" : "Опорная точка (id акции)",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "minimum" : 1,
+            "type" : "integer",
+            "format" : "int64"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Страница пагинации с акциями",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/PageOfStocks"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Одно или несколько полей содержат недопустимые значения",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ValidationError"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Пользователь не авторизован",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Внутренняя ошибка сервера",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/stocks/{id}/history" : {
+      "get" : {
+        "tags" : [ "Stocks" ],
+        "summary" : "История изменения цен на акцию",
+        "description" : "Список будет сформирован с учетом переданных модификаторов",
+        "operationId" : "getStockHistory",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "id акции",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "minimum" : 1,
+            "type" : "integer",
+            "format" : "int64"
+          }
+        }, {
+          "name" : "range",
+          "in" : "query",
+          "description" : "За какой период график",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string",
+            "default" : "week",
+            "enum" : [ "day", "week", "month", "6months", "year", "total" ]
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "История изменения цены",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StockPriceHistory"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Одно или несколько полей содержат недопустимые значения",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ValidationError"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Акция не найдена",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Внутренняя ошибка сервера",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components" : {
+    "schemas" : {
+      "LoginAndPassword" : {
+        "required" : [ "login", "password" ],
+        "type" : "object",
+        "properties" : {
+          "login" : {
+            "maxLength" : 100,
+            "minLength" : 3,
+            "pattern" : "^[a-z|A-Z|\\d|_]{3,100}$",
+            "type" : "string",
+            "description" : "Уникальное имя пользователя"
+          },
+          "password" : {
+            "maxLength" : 64,
+            "minLength" : 8,
+            "type" : "string",
+            "description" : "Пароль"
+          }
+        }
+      },
+      "AccessToken" : {
+        "required" : [ "accessToken" ],
+        "type" : "object",
+        "properties" : {
+          "accessToken" : {
+            "type" : "string",
+            "description" : "Токен для получения доступа к ресурсу"
+          }
+        }
+      },
+      "RefreshToken" : {
+        "required" : [ "refreshToken" ],
+        "type" : "object",
+        "properties" : {
+          "refreshToken" : {
+            "type" : "string",
+            "description" : "Токен для получения accessToken",
+            "nullable" : false
+          }
+        }
+      },
+      "Tokens" : {
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/AccessToken"
+        }, {
+          "$ref" : "#/components/schemas/RefreshToken"
+        } ]
+      },
+      "Error" : {
+        "required" : [ "code", "message" ],
+        "type" : "object",
+        "properties" : {
+          "code" : {
+            "type" : "string",
+            "description" : "Код ошибки"
+          },
+          "message" : {
+            "type" : "string",
+            "description" : "Текст ошибки"
+          }
+        }
+      },
+      "InvalidField" : {
+        "required" : [ "field", "message" ],
+        "type" : "object",
+        "properties" : {
+          "field" : {
+            "type" : "string"
+          },
+          "message" : {
+            "type" : "string"
+          }
+        }
+      },
+      "ValidationError" : {
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/Error"
+        }, {
+          "required" : [ "invalidFields" ],
+          "type" : "object",
+          "properties" : {
+            "invalidFields" : {
+              "type" : "array",
+              "description" : "Список полей, содержащих ошибки",
+              "items" : {
+                "$ref" : "#/components/schemas/InvalidField"
+              }
+            }
+          }
+        } ]
+      },
+      "StockInfo" : {
+        "required" : [ "code", "iconUrl", "id", "name" ],
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "minimum" : 1,
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "code" : {
+            "maxLength" : 10,
+            "minLength" : 3,
+            "type" : "string",
+            "description" : "Буквенный код",
+            "example" : "TCS"
+          },
+          "name" : {
+            "type" : "string",
+            "description" : "Наименование",
+            "example" : "TCS Group (Tinkoff)"
+          },
+          "iconUrl" : {
+            "type" : "string",
+            "description" : "Иконка компании",
+            "format" : "url"
+          }
+        },
+        "description" : "Акция"
+      },
+      "Stock" : {
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/StockInfo"
+        }, {
+          "required" : [ "price", "priceDelta" ],
+          "type" : "object",
+          "properties" : {
+            "price" : {
+              "minimum" : 0,
+              "exclusiveMinimum" : true,
+              "type" : "number",
+              "description" : "Текущая цена",
+              "example" : 23
+            },
+            "priceDelta" : {
+              "type" : "number",
+              "description" : "Изменение цены за последний день",
+              "example" : 0.3
+            }
+          }
+        } ]
+      },
+      "AccountInfoStock" : {
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/Stock"
+        }, {
+          "required" : [ "count", "price" ],
+          "type" : "object",
+          "properties" : {
+            "count" : {
+              "minimum" : 1,
+              "type" : "integer"
+            },
+            "price" : {
+              "minimum" : 0,
+              "exclusiveMinimum" : true,
+              "type" : "number",
+              "description" : "Цена продажи"
+            }
+          }
+        } ]
+      },
+      "AccountInfo" : {
+        "required" : [ "balance", "name", "stocks" ],
+        "type" : "object",
+        "properties" : {
+          "name" : {
+            "type" : "string",
+            "description" : "Имя пользователя. Пока это просто логин"
+          },
+          "balance" : {
+            "minimum" : 0,
+            "type" : "number",
+            "description" : "Текущий баланс"
+          },
+          "stocks" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/AccountInfoStock"
+            }
+          }
+        }
+      },
+      "PageOfStocks" : {
+        "required" : [ "items", "nextItemId", "prevItemId" ],
+        "type" : "object",
+        "properties" : {
+          "nextItemId" : {
+            "minimum" : 1,
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "prevItemId" : {
+            "minimum" : 1,
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "items" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Stock"
+            }
+          }
+        }
+      },
+      "Transaction" : {
+        "required" : [ "amount", "stockId" ],
+        "type" : "object",
+        "properties" : {
+          "stockId" : {
+            "minimum" : 1,
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "amount" : {
+            "type" : "integer",
+            "description" : "Количество акций для покупки",
+            "format" : "int32"
+          }
+        }
+      },
+      "TransactionStatus" : {
+        "required" : [ "status" ],
+        "type" : "object",
+        "properties" : {
+          "status" : {
+            "type" : "string",
+            "enum" : [ "success", "failed" ]
+          }
+        }
+      },
+      "History" : {
+        "required" : [ "amount", "date", "totalPrice", "type" ],
+        "type" : "object",
+        "properties" : {
+          "stock" : {
+            "$ref" : "#/components/schemas/StockInfo"
+          },
+          "amount" : {
+            "type" : "integer",
+            "description" : "Количество акций для покупки",
+            "format" : "int32"
+          },
+          "totalPrice" : {
+            "minimum" : 0,
+            "exclusiveMinimum" : true,
+            "type" : "number",
+            "description" : "Полная сумма транзакции"
+          },
+          "date" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "type" : {
+            "type" : "string",
+            "enum" : [ "buy", "sell" ]
+          }
+        }
+      },
+      "PriceHistory" : {
+        "required" : [ "date", "price" ],
+        "type" : "object",
+        "properties" : {
+          "date" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "price" : {
+            "minimum" : 0,
+            "exclusiveMinimum" : true,
+            "type" : "number",
+            "example" : 23
+          }
+        }
+      },
+      "StockPriceHistory" : {
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/StockInfo"
+        }, {
+          "required" : [ "from", "history", "to" ],
+          "type" : "object",
+          "properties" : {
+            "from" : {
+              "type" : "string",
+              "description" : "С какой даты",
+              "format" : "date"
+            },
+            "to" : {
+              "type" : "string",
+              "description" : "По какую",
+              "format" : "date"
+            },
+            "history" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/components/schemas/PriceHistory"
+              }
+            }
+          }
+        } ]
+      }
+    },
+    "responses" : {
+      "InternalServerError" : {
+        "description" : "Внутренняя ошибка сервера",
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "ValidationError" : {
+        "description" : "Одно или несколько полей содержат недопустимые значения",
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/ValidationError"
+            }
+          }
+        }
+      },
+      "Unauthorized" : {
+        "description" : "Пользователь не авторизован",
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "StockNotFound" : {
+        "description" : "Акция не найдена",
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "Tokens" : {
+        "description" : "Пара JWT токенов",
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/Tokens"
+            }
+          }
+        }
+      },
+      "AccessToken" : {
+        "description" : "Токен для доступа к приложению",
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/AccessToken"
+            }
+          }
+        }
+      },
+      "TransactionStatus" : {
+        "description" : "Статус транзакции",
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/TransactionStatus"
+            }
+          }
+        }
+      },
+      "History" : {
+        "description" : "История транзакций",
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/History"
+            }
+          }
+        }
+      },
+      "PageOfStocks" : {
+        "description" : "Страница пагинации с акциями",
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/PageOfStocks"
+            }
+          }
+        }
+      },
+      "StockPriceHistory" : {
+        "description" : "История изменения цены",
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/StockPriceHistory"
+            }
+          }
+        }
+      },
+      "AccountInfo" : {
+        "description" : "Информация об аккаунте",
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/AccountInfo"
+            }
+          }
+        }
+      }
+    },
+    "requestBodies" : {
+      "LoginAndPassword" : {
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/LoginAndPassword"
+            }
+          }
+        },
+        "required" : true
+      },
+      "Transaction" : {
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/Transaction"
+            }
+          }
+        },
+        "required" : true
+      },
+      "RefreshToken" : {
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/RefreshToken"
+            }
+          }
+        },
+        "required" : true
+      }
+    },
+    "securitySchemes" : {
+      "bearerAuth" : {
+        "type" : "http",
+        "scheme" : "bearer",
+        "bearerFormat" : "JWT"
+      }
+    }
+  }
+}
