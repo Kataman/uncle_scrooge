@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import './App.css';
-//import RegForm from './components/regForm/RegForm';
+
 import SignUp from './containers/SignUp';
+import SignIn from './containers/SignIn';
 import Account from './components/account/Account';
 
 import { BrowserRouter as Router, Route, Link, Redirect, withRouter } from "react-router-dom";
-import signUp from './API/signup';
 
 
 class App extends Component {
@@ -28,17 +28,18 @@ class App extends Component {
               <Link to="/register">Register</Link>
             </li>
             <li>
+              <Link to="/login">Login</Link>
+            </li>
+            <li>
               <Link to="/account">Account</Link>
             </li>
           </ul>
         </nav>
 
-        
-
         <Route path="/register" exact component={SignUp} />
+        <Route path="/login" exact component={SignIn} />
         <Route path="/account" exact component={Account} />
         
-
       </Router>
     );
   }

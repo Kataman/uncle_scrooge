@@ -3,7 +3,7 @@ import { withRouter } from 'react-router';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 
-class RegForm extends Component {
+class LoginForm extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -13,7 +13,6 @@ class RegForm extends Component {
     this.onChangeLog = this.onChangeLog.bind(this);
     this.onChangePass = this.onChangePass.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.toLogin = this.toLogin.bind(this);
   }
 
   onChangeLog(event) { // вносимые изменения
@@ -26,17 +25,12 @@ class RegForm extends Component {
   
   handleSubmit(event) { // отправка данных на сервер и получение токенов
     event.preventDefault();
-    const newUser = { 
+    const user = { 
       login: this.state.login, 
       password: this.state.password
     };
-    this.props.submit(newUser);
+    this.props.submit(user);
     this.props.history.push('/account');
-  }
-
-  toLogin(event) {
-    event.preventDefault();
-    this.props.history.push('/login');
   }
   
   render() {
@@ -44,7 +38,7 @@ class RegForm extends Component {
       <Form>
 
           <Form.Group controlId="formBasicEmail">
-            <Form.Label>Enter e-mail or name</Form.Label>
+            <Form.Label>Enter your login</Form.Label>
             <Form.Control 
               onChange={this.onChangeLog} 
               name="login" 
@@ -55,7 +49,7 @@ class RegForm extends Component {
           </Form.Group>
 
           <Form.Group controlId="formBasicPassword">
-            <Form.Label>Create a password</Form.Label>
+            <Form.Label>Enter your password</Form.Label>
             <Form.Control 
               onChange={this.onChangePass} 
               name="password" 
@@ -68,17 +62,10 @@ class RegForm extends Component {
           onClick={this.handleSubmit}>
           Submit
         </Button>
-
-        <Button 
-          onClick={this.toLogin}
-          variant="secondary" size="sm">
-          If you are already registered,
-          click here.
-        </Button>
         
       </Form>
     );
   }
 }
 
-export default RegForm;
+export default LoginForm;

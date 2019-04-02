@@ -12,7 +12,7 @@ import createSagaMiddleware from 'redux-saga';
 import mySaga from './sagas/sagas';
 
 
-const sagaMiddleware = createSagaMiddleware()
+const sagaMiddleware = createSagaMiddleware();
 // const store = createStore(
 //   reducers,
 //   applyMiddleware(sagaMiddleware),
