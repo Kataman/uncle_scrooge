@@ -1,6 +1,6 @@
 export function reducers(state = {tokens: {}}, action) {
     switch (action.type) {
-        case 'LOGIN_SUCCEEDED':
+        case 'LOGIN_SUCCESEDED':
             console.log(action);
             return {
                 ...state,

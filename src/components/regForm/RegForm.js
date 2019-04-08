@@ -81,4 +81,4 @@ class RegForm extends Component {
   }
 }
 
-export default RegForm;
+export default withRouter(RegForm);

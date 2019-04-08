@@ -6,7 +6,7 @@ import signIn from '../API/signin';
 function* signUser(action) {
     try {
       const tokens = yield call(signUp, action.payload);
-      yield put({type: "SIGNUP_SUCCEEDED", payload: tokens});
+      yield put({type: "SIGNUP_SUCCESEDED", payload: tokens});
       
     } 
 
@@ -18,7 +18,7 @@ function* signUser(action) {
 function* fetchUser(action) {
   try {
     const tokens = yield call(signIn, action.payload);
-    yield put({type: "SIGNIN_SUCCEEDED", payload: tokens});
+    yield put({type: "SIGNIN_SUCCESEDED", payload: tokens});
     
   } 
 
