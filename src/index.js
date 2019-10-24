@@ -1,33 +1,34 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Provider } from 'react-redux';
-import './index.css';
-
 import App from './App';
-import {reducers} from './reducers';
-
-import { createStore, applyMiddleware } from 'redux';
-import { composeWithDevTools } from 'redux-devtools-extension';
-import createSagaMiddleware from 'redux-saga';
+import { Provider } from 'react-redux';
+import reducer from './reducers';
 import mySaga from './sagas/sagas';
 
+import { createStore, applyMiddleware, compose } from 'redux';
+import { composeWithDevTools } from 'redux-devtools-extension';
+import createSagaMiddleware from 'redux-saga';
 
+import './index.css';
+
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const sagaMiddleware = createSagaMiddleware();
-// const store = createStore(
-//   reducers,
-//   applyMiddleware(sagaMiddleware),
-//   window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
-// );
-
-const store = createStore(reducers, composeWithDevTools(
-  applyMiddleware(sagaMiddleware),
-));
-
+const store = createStore(
+    reducer,
+    composeEnhancers(
+        applyMiddleware(sagaMiddleware),
+    )
+);
 sagaMiddleware.run(mySaga);
 
+export default store;
+
 ReactDOM.render(
-    <Provider store={store}>
-        <App />
-    </Provider>,
-    document.getElementById('root')
+  <Provider store={store}>
+      <App />
+  </Provider>,
+  document.getElementById('root')
 );
+
+
+

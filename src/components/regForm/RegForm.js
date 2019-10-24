@@ -1,15 +1,14 @@
 import React, { Component } from 'react';
-import { withRouter } from 'react-router';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 
 class RegForm extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            login: '',
-            password: '',
-        }
+  constructor(props) {
+    super(props);
+    this.state = {
+      login: '',
+      password: '',
+    }
     this.onChangeLog = this.onChangeLog.bind(this);
     this.onChangePass = this.onChangePass.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -31,7 +30,6 @@ class RegForm extends Component {
       password: this.state.password
     };
     this.props.submit(newUser);
-    this.props.history.push('/account');
   }
 
   toLogin(event) {
@@ -43,20 +41,24 @@ class RegForm extends Component {
     return (
       <Form>
 
-          <Form.Group controlId="formBasicEmail">
-            <Form.Label>Enter e-mail or name</Form.Label>
-            <Form.Control 
-              onChange={this.onChangeLog} 
-              name="login" 
-              type="text"
-              placeholder="Login"
-              autoComplete="off"
-            />
-          </Form.Group>
+        <Form.Group controlId="formBasicEmail">
+          <Form.Label>
+            Enter e-mail or name
+          </Form.Label>
+          <Form.Control 
+            onChange={this.onChangeLog} 
+            name="login" 
+            type="text"
+            placeholder="Login"
+            autoComplete="off"
+          /> 
+        </Form.Group>
 
-          <Form.Group controlId="formBasicPassword">
-            <Form.Label>Create a password</Form.Label>
-            <Form.Control 
+        <Form.Group controlId="formBasicPassword">
+          <Form.Label>
+            Create a password
+          </Form.Label>
+          <Form.Control 
               onChange={this.onChangePass} 
               name="password" 
               type="password"
@@ -64,8 +66,7 @@ class RegForm extends Component {
             />
           </Form.Group>     
        
-        <Button
-          onClick={this.handleSubmit}>
+        <Button onClick={this.handleSubmit}>
           Submit
         </Button>
 
@@ -81,4 +82,4 @@ class RegForm extends Component {
   }
 }
 
-export default withRouter(RegForm);
+export default RegForm;

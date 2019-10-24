@@ -10,5 +10,4 @@ export default function signIn(user) {
     .then(function(response) {
       return response.json()
     })
-    
 }

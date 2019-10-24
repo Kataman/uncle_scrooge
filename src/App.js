@@ -1,14 +1,16 @@
 import React, { Component } from 'react';
 import './App.css';
+import { ConnectedRouter } from 'react-router-redux';
+import { PrivateRoute } from './containers/PrivateRoute';
+import { BrowserRouter as Router, Route, Link, Redirect, withRouter, Switch } from "react-router-dom";
 
 import SignUp from './containers/SignUp';
 import SignIn from './containers/SignIn';
 import Account from './components/account/Account';
+import NotFound from './components/NotFound';
 
-import { BrowserRouter as Router, Route, Link, Redirect, withRouter } from "react-router-dom";
 
-
-class App extends Component {
+class App extends Component {   
   render() {
     return (
       <Router>
@@ -16,14 +18,10 @@ class App extends Component {
           rel="stylesheet"
           href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
-          crossOrigin="anonymous"
-        />
+          crossOrigin="anonymous"/>
 
         <nav>
           <ul>
-            <li>
-              <Link to="/">Home</Link>
-            </li>
             <li>
               <Link to="/register">Register</Link>
             </li>
@@ -35,11 +33,13 @@ class App extends Component {
             </li>
           </ul>
         </nav>
-
-        <Route path="/register" exact component={SignUp} />
-        <Route path="/login" exact component={SignIn} />
-        <Route path="/account" exact component={Account} />
-        
+      
+        <Switch>
+          <Route path="/register" component={SignUp} />
+          <Route path="/login" component={SignIn} />
+          <PrivateRoute path="/account" component={Account} />
+          <Route component={NotFound} />
+        </Switch>
       </Router>
     );
   }
